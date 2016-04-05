@@ -136,7 +136,7 @@ int base;
 			}
 		}
 		else{
-			
+			printf("decodifica");
 		}
 
 	}
