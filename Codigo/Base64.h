@@ -1,5 +1,5 @@
-#include<stdint.h>
-#include<stdio.h>
+#include <stdint.h>
+#include <stdio.h>
 
 #ifndef BASE64_H
 #define BASE64_H
@@ -53,12 +53,10 @@ char Base64_ObterCaractereDecodificado(uint8_t codigo)
 	if(codigo <= 'Z')
 	{
 
-		printf("dif-1 %d \n",codigo - 'A');
 		return codigo - 'A';
 	}
 	if(codigo <= 'z'  && codigo >= 'a')
 	{
-		printf("dif-2 %d \n",codigo - 71);
 		return codigo - 71;
 	}
 	if( codigo == '+')
@@ -140,10 +138,6 @@ static inline ElementoBase64 Base64_DecodificarTexto(uint32_t texto, int *bytesV
 		(*bytesValidos)--;		
 	}
 	ElementoBase64 retorno;
-	printf("valor lido %d \n",aux[0]);
-	printf("valor lido %d \n",aux[1]);
-	printf("valor lido %d \n",aux[2]);
-	printf("valor lido %d \n",aux[3]);
 	//(aux[0]<<2)|(aux[1]>>4)
 	// aux[1]<<4 | aux[2]>>2
 	//aux[2]<<6 | aux[3]
