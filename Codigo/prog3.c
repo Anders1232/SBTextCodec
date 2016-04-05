@@ -77,20 +77,22 @@ int base;
 		}
 	}else{
 		{
-			int numPraDecodificar;
+			uint32_t numPraDecodificar;
 			ElementoBase64 elementoDecodificado;
 			int bytesValidos;//para o caso dos = no final do arquivo não se deve imprimir alguns bytes
 			while(!feof(arqEntrada)){
 				fread(&numPraDecodificar, 4, 1, arqEntrada);
 				elementoDecodificado = Base64_DecodificarTexto(numPraDecodificar, &bytesValidos);
-				fprintf(arqSaida, "%c", elementoDecodificado.byte[0]);
+				fprintf(stdout, "valor no arq %c \n",(elementoDecodificado.byte[0]<<2)|(elementoDecodificado.byte[1]>>4));
+				fprintf(arqSaida, "%c",(elementoDecodificado.byte[0]<<2)|(elementoDecodificado.byte[1]>>4) );
 				if(bytesValidos >=2){
-					fprintf(stdout, "%c", elementoDecodificado.byte[1]);
-					fprintf(arqSaida, "%c", elementoDecodificado.byte[1]);
+					fprintf(stdout, "valor no arq %c \n",(elementoDecodificado.byte[1]<<4) | (elementoDecodificado.byte[2]>>2));
+					fprintf(arqSaida, "%c",(elementoDecodificado.byte[1]<<4) | (elementoDecodificado.byte[2]>>2));
 				}
 				if(bytesValidos ==3){
-					fprintf(stdout, "%c", elementoDecodificado.byte[1]);
-					fprintf(arqSaida, "%c", elementoDecodificado.byte[2]);
+					fprintf(stdout, "valor no arq %c \n",(elementoDecodificado.byte[2]<<6) | (elementoDecodificado.byte[3]));
+					fprintf(arqSaida, "%c", (elementoDecodificado.byte[2]<<6) | (elementoDecodificado.byte[3]));
+					
 				}
 			}
 		}
