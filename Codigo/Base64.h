@@ -138,29 +138,12 @@ static inline ElementoBase64 Base64_DecodificarTexto(uint32_t texto, int *bytesV
 		(*bytesValidos)--;		
 	}
 	ElementoBase64 retorno;
-	//(aux[0]<<2)|(aux[1]>>4)
-	// aux[1]<<4 | aux[2]>>2
-	//aux[2]<<6 | aux[3]
+
 	int32_t concat;
 	retorno.byte[0]= Base64_ObterCaractereDecodificado( aux[0] );
 	retorno.byte[1]= Base64_ObterCaractereDecodificado( aux[1] );
 	retorno.byte[2]= Base64_ObterCaractereDecodificado( aux[2] );
 	retorno.byte[3]= Base64_ObterCaractereDecodificado( aux[3] );
-	/*
-	concat = retorno.byte[0];
-	printf("primeiro 8 bits%0x",concat);
-	concat <<= 8;
-	uint8_t shifted = retorno.byte[1] << 2;
-
-	concat = concat | shifted;
-	concat <<= 6;
-	shifted = retorno.byte[2] << 2;
-	concat = concat | shifted;
-	shifted = retorno.byte[3] << 2;
-	concat = concat | shifted;
-	concat >>= 2;
-	printf("final %0x",concat);
-	*/
 
 	return retorno;
 }

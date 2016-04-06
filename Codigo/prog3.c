@@ -132,7 +132,7 @@ int base;
 					}
 				}
 				
-				ImprimirTextoCodificado85(arqSaida, "%c%c%c%c%c", elemento, auxAnaliseLeitura);
+				ImprimirTextoCodificado85(arqSaida, "%c", elemento, auxAnaliseLeitura);
 			}
 		}
 		else{
