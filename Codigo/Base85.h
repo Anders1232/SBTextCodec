@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 // Struct para auxiliar na leitura do arquivo e manipulação dos bits.
 struct elementoBase85{
@@ -21,7 +22,7 @@ uint32_t ConcatenaBits(ElementoBase85 bits){
 	return result;
 }
 
-// Codifica os 32 bitus lidos do arquivo e salva cada caracter codificado em um vetor.
+// Codifica os 32 bits lidos do arquivo e salva cada caracter codificado em um vetor.
 static inline void Base85_CodificarTexto(uint32_t aux,uint8_t* coded){
 	int i;
 	div_t output;
@@ -68,4 +69,56 @@ void ImprimirTextoCodificado85(FILE *onde, const char* como, ElementoBase85 oQue
 		}
 	}
 
+}
+
+static inline uint32_t Base85_DecodificarTexto(ElementoBase85 bits){
+	uint32_t result;
+	result = (bits.byte[0] * pow(85,4)) + (bits.byte[1] * pow(85,3)) + (bits.byte[2] * pow(85,2)) + (bits.byte[3] * pow(85,1)) + bits.byte[4];
+	return result;
+}
+
+static inline void Base85_FormatarTexto(uint32_t result,uint8_t* coded){
+	coded[0] = result >> 24;
+	coded[1] = (result >> 16) & 0xFF;
+	coded[2] = (result >> 8) & 0xFF;
+	coded[3] = result & 0xFF;
+}
+
+void ImprimirTextoDecodificado85(FILE *onde, const char* como, ElementoBase85 oQue, int quantBytesValidos){
+
+	int i;
+	for(i = 0; i < 5; i++)
+		oQue.byte[i] -= 33;
+
+	uint32_t result;
+	result = Base85_DecodificarTexto(oQue);
+
+	uint8_t coded[4];
+	Base85_FormatarTexto(result,coded);
+
+	if(quantBytesValidos == 5){
+		for(i = 0; i <= 3; i++){
+			fprintf(onde, como,coded[i]);
+		}
+	}
+
+	if(quantBytesValidos == 4){
+		for(i = 0; i <= 2; i++){
+			fprintf(onde, como,coded[i]);
+		}
+	}
+
+	if(quantBytesValidos == 3){
+		for(i = 0; i <= 1; i++){
+			fprintf(onde, como,coded[i]);
+		}
+	}
+
+	if(quantBytesValidos == 2){
+		for(i = 0; i <= 0; i++){
+			fprintf(onde, como,coded[i]);
+		}
+	}
+
+	
 }

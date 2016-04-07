@@ -49,7 +49,7 @@ int base;
 	if(!strcmp(codOuDec, "cod")){
 		sprintf(nomeSaida, "%s.b%d", nomeArq, base);
 	}else{
-		snprintf(nomeSaida, strlen(nomeArq)-2, "_%s", nomeArq);
+		snprintf(nomeSaida, strlen(nomeArq)-2, "_%s.b%d", nomeArq,base);
 	}
 
 	FILE *arqSaida= fopen(nomeSaida, "wb");
@@ -114,6 +114,7 @@ int base;
 		ElementoBase85 elemento;
 
 		if(umPraCod0PraDecod){
+
 			while(!feof(arqEntrada)){
 				auxAnaliseLeitura= fread(elemento.byte, 1, 4, arqEntrada);
 
@@ -136,7 +137,34 @@ int base;
 			}
 		}
 		else{
-			printf("decodifica");
+
+			while(!feof(arqEntrada)){
+				auxAnaliseLeitura= fread(elemento.byte, 1, 5, arqEntrada);
+
+				if(auxAnaliseLeitura != 5){
+					if(auxAnaliseLeitura == 4 ){
+						elemento.byte[4]= 117;
+					}
+					if(auxAnaliseLeitura == 3 ){
+						elemento.byte[3]= 117;
+						elemento.byte[4]= 117;
+					}
+					if(auxAnaliseLeitura == 2){
+						elemento.byte[2]= 117;
+						elemento.byte[3]= 117;
+						elemento.byte[4]= 117;
+					}
+					if(auxAnaliseLeitura == 1){
+						elemento.byte[1]= 117;
+						elemento.byte[2]= 117;
+						elemento.byte[3]= 117;
+						elemento.byte[4]= 117;
+					}
+				}
+				
+				ImprimirTextoDecodificado85(arqSaida, "%c", elemento, auxAnaliseLeitura);
+			}
+			
 		}
 
 	}
