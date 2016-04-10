@@ -8,16 +8,16 @@
 int main(void)
 {
 #ifdef TESTE1
-	char formato[]= "%c\t%c\t%c\t%c\n";
+	char formato[]= "%X\t%X\t%X\t%X\n";
 	ElementoBase64 e;
 	e.byte[0] = 'M';
-	e.byte[1] = 'a';
+	e.byte[1] = '\n';
 	e.byte[2] = 'n';
 	e.byte[3] = '\0';
-	ImprimirTextoCodificado64(stdout, formato, e);
-	
-	uint32_t temp= Base64_CodificarTexto(e);
-	printf("%s\n",  (char*)(Base64_DecodificarTexto(temp).byte) );
+	ImprimirTextoCodificado64(stdout, formato, e, 3);
+	int inte;
+	uint32_t temp= Base64_CodificarTexto(e, 3);
+	printf("%s\n",  (char*)(Base64_DecodificarTexto(temp, &inte).byte));
 	
 #elif TESTE2
 	uint8_t cont=0;

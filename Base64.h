@@ -5,6 +5,7 @@
 #define BASE64_H
 
 #define CODIGO_IGUAL 64
+//#define USAR_FPRINTF
 
 struct elementoBase64
 {
@@ -50,7 +51,7 @@ char Base64_ObterCaractereDecodificado(uint8_t codigo)
 	{
 		return codigo + 4;
 	}
-	if(codigo <= 'Z')
+	if(codigo <= 'Z' && codigo >= 'A')
 	{
 
 		return codigo - 'A';
@@ -82,6 +83,7 @@ static inline uint32_t Base64_CodificarTexto(ElementoBase64 elemento, uint8_t qu
 {
 	uint32_t retorno;
 	char* aux= (char *)&retorno;
+	if(aux[0] == '\n' || aux[1] == '\n' || aux[2] == '\n')printf("pula linha lido: bytes validos = %d\n", quantidadeBytesValidos);
 	aux[0]= (elemento.byte[0])>>2;
 	aux[1]= ( (elemento.byte[0])<<4 | elemento.byte[1]>> 4 ) & 0x3F;
 	aux[2]= ( (elemento.byte[1])<<2 | elemento.byte[2]>> 6 ) & 0x3F;
@@ -138,30 +140,10 @@ static inline ElementoBase64 Base64_DecodificarTexto(uint32_t texto, int *bytesV
 		(*bytesValidos)--;		
 	}
 	ElementoBase64 retorno;
-	//(aux[0]<<2)|(aux[1]>>4)
-	// aux[1]<<4 | aux[2]>>2
-	//aux[2]<<6 | aux[3]
-	int32_t concat;
 	retorno.byte[0]= Base64_ObterCaractereDecodificado( aux[0] );
 	retorno.byte[1]= Base64_ObterCaractereDecodificado( aux[1] );
 	retorno.byte[2]= Base64_ObterCaractereDecodificado( aux[2] );
 	retorno.byte[3]= Base64_ObterCaractereDecodificado( aux[3] );
-	/*
-	concat = retorno.byte[0];
-	printf("primeiro 8 bits%0x",concat);
-	concat <<= 8;
-	uint8_t shifted = retorno.byte[1] << 2;
-
-	concat = concat | shifted;
-	concat <<= 6;
-	shifted = retorno.byte[2] << 2;
-	concat = concat | shifted;
-	shifted = retorno.byte[3] << 2;
-	concat = concat | shifted;
-	concat >>= 2;
-	printf("final %0x",concat);
-	*/
-
 	return retorno;
 }
 
