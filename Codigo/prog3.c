@@ -108,16 +108,16 @@ int base;
 			}
 		}
 	}
-
+	// Se passou 85 como argumento.
 	if(base == 85){
 
 		ElementoBase85 elemento;
-
+		// Avalia se passou cod ou dec como argumento.
 		if(umPraCod0PraDecod){
-
+			// loop para leitura do arquivo até o final.
 			while(!feof(arqEntrada)){
 				auxAnaliseLeitura= fread(elemento.byte, 1, 4, arqEntrada);
-
+				//Padding
 				if(auxAnaliseLeitura != 4){
 					if(auxAnaliseLeitura == 3 ){
 						elemento.byte[3]= 0;
@@ -132,15 +132,16 @@ int base;
 						elemento.byte[3]= 0;
 					}
 				}
-				
+				//Função para codificar e escrever no arquivo de saída.
 				ImprimirTextoCodificado85(arqSaida, "%c", elemento, auxAnaliseLeitura);
 			}
 		}
 		else{
-
+			//Loop para leitura do arquivo até o final.
 			while(!feof(arqEntrada)){
 				auxAnaliseLeitura= fread(elemento.byte, 1, 5, arqEntrada);
 
+				//Realizando o padding de acordo com a quantidade de bytes lidos.
 				if(auxAnaliseLeitura != 5){
 					if(auxAnaliseLeitura == 4 ){
 						elemento.byte[4]= 117;
@@ -161,7 +162,7 @@ int base;
 						elemento.byte[4]= 117;
 					}
 				}
-				
+				//Função para decodificar e escrever no arquivo de saída.	
 				ImprimirTextoDecodificado85(arqSaida, "%c", elemento, auxAnaliseLeitura);
 			}
 			
@@ -169,6 +170,7 @@ int base;
 
 	}
 
+	//Fecha arquivos de entrada e saida.
 	fclose(arqEntrada);
 	fclose(arqSaida);
 	return 0;
