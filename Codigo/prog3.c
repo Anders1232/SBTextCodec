@@ -6,6 +6,9 @@
 #include "Base85.h"
 
 #define TAM_MAX_NOME_ARQUIVO 150
+//#define BEBUG_64
+
+
 
 int main(int argc, char** argv){
 
@@ -44,26 +47,31 @@ int base;
 
 	//Abre arquivos de entrada e saída e formata nome do arquivo de saída.
 	FILE *arqEntrada= fopen(nomeArq, "rb");
+	
+	
+	
 	char nomeSaida[55];
 
 	if(!strcmp(codOuDec, "cod")){
 		sprintf(nomeSaida, "%s.b%d", nomeArq, base);
 	}else{
-		snprintf(nomeSaida, strlen(nomeArq)-2, "_%s.b%d", nomeArq,base);
+		snprintf(nomeSaida, strlen(nomeArq)-2, "_%s", nomeArq);
 	}
-
+#ifndef BEBUG_64
 	FILE *arqSaida= fopen(nomeSaida, "wb");
-
+#endif
 	//checando se deu certo a abertura
 
 	if(arqEntrada == NULL){
 		printf("[ERRO] Nao foi possivel abrir o arquivo de entrada.");
 	}
+#ifndef BEBUG_64
 	if(arqSaida == NULL){
 		printf("[ERRO] Nao foi possivel abrir o arquivo de saida");
 	}
+#endif
 
-	int auxAnaliseLeitura;
+	int auxAnaliseLeitura = 1;
 	int umPraCod0PraDecod= !strcmp("cod", argv[2]);
 
 	// Executa dependendo da base desejada.
@@ -72,7 +80,7 @@ int base;
 		ElementoBase64 elemento;
 
 		if(umPraCod0PraDecod){
-			while(!feof(arqEntrada)){
+			while(/*!feof(arqEntrada)*/  auxAnaliseLeitura){
 				auxAnaliseLeitura= fread(elemento.byte, 1, 3, arqEntrada);
 				if(auxAnaliseLeitura != 3){
 					if(auxAnaliseLeitura == 2 ){
@@ -86,22 +94,35 @@ int base;
 						break;
 					}
 				}
+#ifdef BEBUG_64
+				elemento.byte[3] = '\0';
+				printf("Caracteres Impressos:\t--%s--\n", elemento.byte);
+				ImprimirTextoCodificado64(stdout, "Caracteres codificados:\t%c%c%c%c\n", elemento, auxAnaliseLeitura);
+#else
 				ImprimirTextoCodificado64(arqSaida, "%c%c%c%c", elemento, auxAnaliseLeitura);
+#endif
 			}
 		}else{
 			{
 				uint32_t numPraDecodificar;
+//				int flagLeituraBemSucedida= 1;
 				ElementoBase64 elementoDecodificado;
 				int bytesValidos;//para o caso dos = no final do arquivo não se deve imprimir alguns bytes
-				while(!feof(arqEntrada)){
-					fread(&numPraDecodificar, 4, 1, arqEntrada);
+				while(/*!feof(arqEntrada )*/auxAnaliseLeitura){
+					auxAnaliseLeitura = fread(&numPraDecodificar, 4, 1, arqEntrada);
 					elementoDecodificado = Base64_DecodificarTexto(numPraDecodificar, &bytesValidos);
+#ifndef BEBUG_64
 					fprintf(arqSaida, "%c",(elementoDecodificado.byte[0]<<2)|(elementoDecodificado.byte[1]>>4) );
+#endif
 					if(bytesValidos >=2){
+#ifndef BEBUG_64
 						fprintf(arqSaida, "%c",(elementoDecodificado.byte[1]<<4) | (elementoDecodificado.byte[2]>>2));
+#endif
 					}
 					if(bytesValidos ==3){
+#ifndef BEBUG_64
 						fprintf(arqSaida, "%c", (elementoDecodificado.byte[2]<<6) | (elementoDecodificado.byte[3]));
+#endif
 						
 					}
 				}
@@ -166,12 +187,22 @@ int base;
 				ImprimirTextoDecodificado85(arqSaida, "%c", elemento, auxAnaliseLeitura);
 			}
 			
+
+#ifndef BEBUG_64
+				ImprimirTextoCodificado85(arqSaida, "%c%c%c%c%c", elemento, auxAnaliseLeitura);
+#endif
+			}
+		}
+		else{
+			printf("decodifica");
 		}
 
 	}
 
 	//Fecha arquivos de entrada e saida.
 	fclose(arqEntrada);
+#ifndef BEBUG_64
 	fclose(arqSaida);
+#endif
 	return 0;
 }
