@@ -186,23 +186,13 @@ int base;
 				//Função para decodificar e escrever no arquivo de saída.	
 				ImprimirTextoDecodificado85(arqSaida, "%c", elemento, auxAnaliseLeitura);
 			}
-			
-
-#ifndef BEBUG_64
-				ImprimirTextoCodificado85(arqSaida, "%c%c%c%c%c", elemento, auxAnaliseLeitura);
-#endif
-			}
-		}
-		else{
-			printf("decodifica");
 		}
 
 	}
 
 	//Fecha arquivos de entrada e saida.
 	fclose(arqEntrada);
-#ifndef BEBUG_64
 	fclose(arqSaida);
-#endif
+
 	return 0;
 }

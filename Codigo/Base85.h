@@ -1,12 +1,39 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+ 
+// Struct para auxiliar na leitura do arquivo e manipulação dos bits.
+ struct elementoBase85{
+ 	uint8_t byte[5];
+ };
+ typedef struct elementoBase85 ElementoBase85;
+ 
+//Concatena os bits lidos em uma var de 32bits para codificação.
+uint32_t ConcatenaBits(ElementoBase85 bits){
+	uint32_t result;
+	result = bits.byte[0];
+	result <<= 8;
+	result = result | bits.byte[1];
+	result <<= 8;
+	result = result | bits.byte[2];
+	result <<= 8;
+	result = result | bits.byte[3];
+	return result;
+}
 
-struct elementoBase85{
-	uint8_t byte[5];
-};
-typedef struct elementoBase85 ElementoBase85;
-
-
+// Codifica os 32 bits lidos do arquivo e salva cada caracter codificado em um vetor.
+static inline void Base85_CodificarTexto(uint32_t aux,uint8_t* coded){
+	int i;
+	div_t output;
+	for(i = 0; i<5; i++){
+		output = div(aux,85);
+		aux = output.quot;
+		coded[i] = (output.rem + 33);
+	}
+}
+ 
+// Codifica bits e aplica lógica para escrita no arquivo de saída.
 void ImprimirTextoCodificado85(FILE *onde, const char* como, ElementoBase85 oQue, int quantBytesValidos){
 
 	int i;
