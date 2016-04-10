@@ -16,6 +16,7 @@ int main(void)
 	VerificarEndian();
 	uint32_t numero= 0x446F7441;
 	char* ptr= &numero;
+	printf("%d\n", '\n');
 	printf("%c%c%c%c\n", ptr[0], ptr[1], ptr[2], ptr[3]);
 	return 0;
 }
