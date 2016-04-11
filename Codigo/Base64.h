@@ -5,7 +5,6 @@
 #define BASE64_H
 
 #define CODIGO_IGUAL 64
-//#define USAR_FPRINTF
 
 struct elementoBase64
 {
@@ -83,7 +82,6 @@ static inline uint32_t Base64_CodificarTexto(ElementoBase64 elemento, uint8_t qu
 {
 	uint32_t retorno;
 	char* aux= (char *)&retorno;
-	if(elemento.byte[0] == '\n' || elemento.byte[1] == '\n' || elemento.byte[2] == '\n')printf("pula linha lido: bytes validos = %d\n", quantidadeBytesValidos);
 	aux[0]= (elemento.byte[0])>>2;
 	aux[1]= ( (elemento.byte[0])<<4 | elemento.byte[1]>> 4 ) & 0x3F;
 	aux[2]= ( (elemento.byte[1])<<2 | elemento.byte[2]>> 6 ) & 0x3F;
@@ -104,16 +102,7 @@ void ImprimirTextoCodificado64(FILE *onde, const char* como, ElementoBase64 oQue
 {
 	int32_t valorCodificado= Base64_CodificarTexto(oQue, quantBytesValidos);
 	char* aux= (char *)&valorCodificado;
-#ifdef USAR_FPRINTF
-	fprintf(
-		onde,
-		como,
-		Base64_ObterCaractereCodificado(aux[0]),
-		Base64_ObterCaractereCodificado(aux[1]),
-		Base64_ObterCaractereCodificado(aux[2]),
-		Base64_ObterCaractereCodificado(aux[3])
-	);
-#else 
+ 
 		char codificado[5];
 		sprintf(
 			codificado,
@@ -123,8 +112,8 @@ void ImprimirTextoCodificado64(FILE *onde, const char* como, ElementoBase64 oQue
 			Base64_ObterCaractereCodificado(aux[2]),
 			Base64_ObterCaractereCodificado(aux[3])
 		);
-		fwrite(codificado, 1, 4, onde);
-#endif
+		for(int cont = 0; cont <= 3; cont++)
+			fwrite(&codificado[cont], 1, 1, onde);
 }
 
 static inline ElementoBase64 Base64_DecodificarTexto(uint32_t texto, int *bytesValidos/*para retorno por ponteiro*/)
