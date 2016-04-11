@@ -5,6 +5,7 @@
 #include "Base64.h"
 #include "Base85.h"
 #include "Base62.h"
+#include "base91.h"
 
 #define TAM_MAX_NOME_ARQUIVO 150
 
@@ -20,14 +21,14 @@ int base;
 			scanf("%s", nomeArq);
 		}
 		case (2):{
-			printf("Queres codificar ou decodificar o arquivo? Digite cod para codificar e dec para decodificar\n");
+			printf("Queres codificar ou decodificar o arquivo? Digite cod para codificar e dec para decodificar:\n");
 			scanf("%s", codOuDec);
 			if(argc ==2){
 				strcpy(nomeArq, argv[1]);
 			}
 		}
 		case (3):{
-			printf("Qual base deseja utilizar para codificar?\n");
+			printf("Qual base deseja utilizar para codificar? (62, 64, 85, 91)\n");
 			scanf(" %d", &base);
 			if(argc ==3){
 				strcpy(nomeArq, argv[1]);
@@ -219,8 +220,9 @@ int base;
             }
 		}
 	}
-
-
+	if(base == 91) {
+		base91EncoderDecoder(arqEntrada, arqSaida, umPraCod0PraDecod);
+	}
 	//Fecha arquivos de entrada e saida.
 	fclose(arqEntrada);
 	fclose(arqSaida);
