@@ -6,7 +6,7 @@
 #include "Base85.h"
 
 #define TAM_MAX_NOME_ARQUIVO 150
-#define BEBUG_64
+//#define BEBUG_64
 
 
 
@@ -129,15 +129,16 @@ int base;
 			}
 		}
 	}
-
+	// Se passou 85 como argumento.
 	if(base == 85){
 
 		ElementoBase85 elemento;
-
+		// Avalia se passou cod ou dec como argumento.
 		if(umPraCod0PraDecod){
+			// loop para leitura do arquivo até o final.
 			while(!feof(arqEntrada)){
 				auxAnaliseLeitura= fread(elemento.byte, 1, 4, arqEntrada);
-
+				//Padding
 				if(auxAnaliseLeitura != 4){
 					if(auxAnaliseLeitura == 3 ){
 						elemento.byte[3]= 0;
@@ -152,20 +153,46 @@ int base;
 						elemento.byte[3]= 0;
 					}
 				}
-#ifndef BEBUG_64
-				ImprimirTextoCodificado85(arqSaida, "%c%c%c%c%c", elemento, auxAnaliseLeitura);
-#endif
+				//Função para codificar e escrever no arquivo de saída.
+				ImprimirTextoCodificado85(arqSaida, "%c", elemento, auxAnaliseLeitura);
 			}
 		}
 		else{
-			printf("decodifica");
+			//Loop para leitura do arquivo até o final.
+			while(!feof(arqEntrada)){
+				auxAnaliseLeitura= fread(elemento.byte, 1, 5, arqEntrada);
+
+				//Realizando o padding de acordo com a quantidade de bytes lidos.
+				if(auxAnaliseLeitura != 5){
+					if(auxAnaliseLeitura == 4 ){
+						elemento.byte[4]= 117;
+					}
+					if(auxAnaliseLeitura == 3 ){
+						elemento.byte[3]= 117;
+						elemento.byte[4]= 117;
+					}
+					if(auxAnaliseLeitura == 2){
+						elemento.byte[2]= 117;
+						elemento.byte[3]= 117;
+						elemento.byte[4]= 117;
+					}
+					if(auxAnaliseLeitura == 1){
+						elemento.byte[1]= 117;
+						elemento.byte[2]= 117;
+						elemento.byte[3]= 117;
+						elemento.byte[4]= 117;
+					}
+				}
+				//Função para decodificar e escrever no arquivo de saída.	
+				ImprimirTextoDecodificado85(arqSaida, "%c", elemento, auxAnaliseLeitura);
+			}
 		}
 
 	}
 
+	//Fecha arquivos de entrada e saida.
 	fclose(arqEntrada);
-#ifndef BEBUG_64
 	fclose(arqSaida);
-#endif
+
 	return 0;
 }
