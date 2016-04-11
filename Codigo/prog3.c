@@ -6,7 +6,7 @@
 #include "Base85.h"
 
 #define TAM_MAX_NOME_ARQUIVO 150
-//#define BEBUG_64
+#define BEBUG_64
 
 
 

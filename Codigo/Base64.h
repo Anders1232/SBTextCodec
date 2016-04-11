@@ -83,7 +83,7 @@ static inline uint32_t Base64_CodificarTexto(ElementoBase64 elemento, uint8_t qu
 {
 	uint32_t retorno;
 	char* aux= (char *)&retorno;
-	if(aux[0] == '\n' || aux[1] == '\n' || aux[2] == '\n')printf("pula linha lido: bytes validos = %d\n", quantidadeBytesValidos);
+	if(elemento.byte[0] == '\n' || elemento.byte[1] == '\n' || elemento.byte[2] == '\n')printf("pula linha lido: bytes validos = %d\n", quantidadeBytesValidos);
 	aux[0]= (elemento.byte[0])>>2;
 	aux[1]= ( (elemento.byte[0])<<4 | elemento.byte[1]>> 4 ) & 0x3F;
 	aux[2]= ( (elemento.byte[1])<<2 | elemento.byte[2]>> 6 ) & 0x3F;
