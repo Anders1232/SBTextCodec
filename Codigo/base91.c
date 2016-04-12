@@ -2,7 +2,7 @@
 
 void base91EncoderDecoder(FILE *fileInput, FILE *fileOutput, int encodeSelected) {
 	struct Base91 b91Struct;
-	initBase91(&b91Struct);
+	initializeStruct(&b91Struct);
 	int multiplier;
 	if (encodeSelected)
 		multiplier = 3;
@@ -22,7 +22,7 @@ void base91EncoderDecoder(FILE *fileInput, FILE *fileOutput, int encodeSelected)
 	free(outputBuffer);
 }
 
-void initBase91(struct Base91 *b91Struct){
+void initializeStruct(struct Base91 *b91Struct){
 	b91Struct -> bitNumber = 0;
 	b91Struct -> value = -1;
 	b91Struct -> queue = 0;
@@ -33,6 +33,7 @@ size_t doWork(const unsigned char *inputBuffer, unsigned char *outputBuffer, siz
 	size_t outputSize = 0;
 	unsigned int position, bitNumber;
 	if (encodeSelected) {
+		// Fazer encoding
 		while (inputSize != 0) {
 			bitNumber = b91Struct -> bitNumber;
 			b91Struct -> queue |= *inputBuffer++ << bitNumber;
@@ -55,6 +56,7 @@ size_t doWork(const unsigned char *inputBuffer, unsigned char *outputBuffer, siz
 			inputSize--;
 		}
 	} else {
+		// Fazer decoding
 		for(int i = 0; i < inputSize; i++) {
 			decoded = decodingTable[inputBuffer[i]];
 			if (decoded == 91)
@@ -80,6 +82,7 @@ size_t doWork(const unsigned char *inputBuffer, unsigned char *outputBuffer, siz
 
 size_t finishWork(unsigned char *outputBuffer, struct Base91 *b91Struct, int encodeSelected) {
 	size_t outputSize = 0;
+	// Esvaziar a lista
 	if (encodeSelected) {
 		if (b91Struct -> bitNumber) {
 			outputBuffer[outputSize] = encodingTable[b91Struct -> queue % 91];
@@ -93,6 +96,6 @@ size_t finishWork(unsigned char *outputBuffer, struct Base91 *b91Struct, int enc
 		if (b91Struct -> value != -1)
 			outputBuffer[outputSize++] = b91Struct -> queue | b91Struct -> value << b91Struct -> bitNumber;	
 	}
-	initBase91(b91Struct);
+	initializeStruct(b91Struct);
 	return outputSize;
 }

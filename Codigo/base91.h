@@ -37,6 +37,6 @@ struct Base91 {
 };
 
 void base91EncoderDecoder(FILE *fileInput, FILE *fileOutput, int encodeSelected);
-void initBase91(struct Base91 *b91Struct);
+void initializeStruct(struct Base91 *b91Struct);
 size_t doWork(const unsigned char *inputBuffer, unsigned char *outputBuffer, size_t inputSize, struct Base91 *b91Struct, int encodeSelected);
 size_t finishWork(unsigned char *outputBuffer, struct Base91 *b91Struct, int encodeSelected);
