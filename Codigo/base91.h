@@ -1,8 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <stddef.h>
 
 const static unsigned char encodingTable[91] = {
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -34,16 +31,12 @@ const static unsigned char decodingTable[256] = {
 };
 
 struct Base91 {
-	unsigned long list;
 	unsigned int bitNumber;
+	unsigned long queue;
 	int value;
 };
 
 void base91EncoderDecoder(FILE *fileInput, FILE *fileOutput, int encodeSelected);
 void initBase91(struct Base91 *b91Struct);
-size_t doWork(struct Base91 *b91Struct, const unsigned char *inputBuffer, size_t inputSize, unsigned char *outputBuffer, int encodeSelected);
-size_t doEncoding(struct Base91 *b91Struct, const unsigned char *inputBuffer, size_t inputSize, unsigned char *outputBuffer);
-size_t doDecoding(struct Base91 *b91Struct, const unsigned char *inputBuffer, size_t inputSize, unsigned char *outputBuffer);
-size_t finishWork(struct Base91 *b91Struct, unsigned char *outputBuffer, int encodeSelected);
-size_t finishDecoding(struct Base91 *b91Struct, unsigned char *outputBuffer);
-size_t finishEncoding(struct Base91 *b91Struct, unsigned char *outputBuffer);
+size_t doWork(const unsigned char *inputBuffer, unsigned char *outputBuffer, size_t inputSize, struct Base91 *b91Struct, int encodeSelected);
+size_t finishWork(unsigned char *outputBuffer, struct Base91 *b91Struct, int encodeSelected);
